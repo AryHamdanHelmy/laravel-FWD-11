@@ -17,5 +17,18 @@ class FoodController extends Controller
 
     return $this->successResponse(FoodResource::collection($foods));
     }
+    
+    public function store(Request $request): JsonResponse
+    {
+        $validated = $request->validate([
+            'name' => ['required', 'string', 'max:255'],
+            'description' => ['nullable', 'string'],
+            'price' => ['required', 'numeric', 'min:0'],
+            'stock' => ['required', 'integer', 'min:0'],
+        ]);
+        $food = Food::create($validated);
+        return $this->createdResponse(new FoodResource($food));
+
+    }
 
 }
